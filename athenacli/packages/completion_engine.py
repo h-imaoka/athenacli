@@ -25,6 +25,7 @@ Table = namedtuple('Table', ['schema'])
 View = namedtuple('View', ['schema'])
 Alias = namedtuple('Alias', ['aliases'])
 Database = namedtuple('Database', [])
+# Catalog = namedtuple('Catalog', [])
 Schema = namedtuple('Schema', [])
 Keyword.__new__.__defaults__ = (None,)
 Show = namedtuple('Show', [])
@@ -303,6 +304,8 @@ def suggest_based_on_last_token(token, text_before_cursor, full_text, identifier
         # "\c <db", "use <db>", "DROP DATABASE <db>",
         # "CREATE DATABASE <newdb> WITH TEMPLATE <db>"
         return (Database(),)
+#    elif token_v == 'usec':
+#        return (Catalog(),)
     elif token_v == 'tableformat':
         return (TableFormat(),)
     elif token_v.endswith(',') or is_operand(token_v) or token_v in ['=', 'and', 'or']:

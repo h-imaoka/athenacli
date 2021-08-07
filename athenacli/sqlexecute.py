@@ -27,7 +27,8 @@ class SQLExecute(object):
         s3_staging_dir,
         work_group,
         role_arn,
-        database
+        database,
+        catalog='AwsDataCatalog'
     ):
         self.aws_access_key_id = aws_access_key_id
         self.aws_secret_access_key = aws_secret_access_key
@@ -36,10 +37,11 @@ class SQLExecute(object):
         self.work_group = work_group
         self.role_arn = role_arn
         self.database = database
+        self.catalog = catalog
 
         self.connect()
 
-    def connect(self, database=None):
+    def connect(self, database=None, catalog=None):
         conn = pyathena.connect(
             aws_access_key_id=self.aws_access_key_id,
             aws_secret_access_key=self.aws_secret_access_key,
@@ -47,10 +49,12 @@ class SQLExecute(object):
             s3_staging_dir=self.s3_staging_dir,
             work_group=self.work_group,
             schema_name=database or self.database,
+            catalog_name=catalog or self.catalog,
             role_arn=self.role_arn,
             poll_interval=0.2 # 200ms
         )
         self.database = database or self.database
+        self.catalog = catalog or self.catalog
 
         if hasattr(self, 'conn'):
             self.conn.close()

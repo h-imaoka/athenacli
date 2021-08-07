@@ -59,7 +59,8 @@ class CompletionRefresher(object):
             s3_staging_dir = e.s3_staging_dir,
             work_group = e.work_group,
             role_arn = e.role_arn,
-            database = e.database
+            database = e.database,
+            catalog = e.catalog
         )
 
         # If callbacks is a single function then push it into a list.

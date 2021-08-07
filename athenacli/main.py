@@ -154,6 +154,9 @@ For more details about the error, you can check the log file: %s''' % (athenacli
             self.change_db, 'use', '\\u',
             'Change to a new database.', aliases=('\\u',))
         special.register_special_command(
+            self.change_catalog, 'usec', '\\uc',
+            'Change to a new catalog.', aliases=('\\uc',))
+        special.register_special_command(
             self.change_prompt_format, 'prompt', '\\R',
             'Change prompt format.', aliases=('\\R',), case_sensitive=True)
         special.register_special_command(
@@ -181,6 +184,14 @@ For more details about the error, you can check the log file: %s''' % (athenacli
 
         yield (None, None, None, 'You are now connected to database "%s"' % self.sqlexecute.database)
 
+    def change_catalog(self, arg, **_):
+        if arg is None:
+            self.sqlexecute.connect()
+        else:
+            self.sqlexecute.connect(catalog=arg)
+
+        yield (None, None, None, 'You are now connected to catalog "%s"' % self.sqlexecute.catalog)
+
     def change_prompt_format(self, arg, **_):
         """
         Change the prompt format.
@@ -192,7 +203,7 @@ For more details about the error, you can check the log file: %s''' % (athenacli
         self.prompt = self.get_prompt(arg)
         return [(None, None, None, "Changed prompt format to %s" % arg)]
 
-    def connect(self, aws_config, database):
+    def connect(self, aws_config, database, catalog='AwsDataCatalog'):
         self.sqlexecute = SQLExecute(
             aws_access_key_id = aws_config.aws_access_key_id,
             aws_secret_access_key = aws_config.aws_secret_access_key,
@@ -201,6 +212,7 @@ For more details about the error, you can check the log file: %s''' % (athenacli
             work_group = aws_config.work_group,
             role_arn = aws_config.role_arn,
             database = database
+            
         )
 
     def handle_editor_command(self, text):

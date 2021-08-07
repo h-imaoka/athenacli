@@ -25,7 +25,7 @@ install_requirements = [
     'cli_helpers[styles]>=1.1.0',
     'botocore>=1.5.52',
     'boto3>=1.4.4',
-    'PyAthena>=1.2.2',
+    'PyAthena>=2.2.0',
 ]
 
 setup(

@@ -11,11 +11,22 @@ from .main import special_command, RAW_QUERY, PARSED_QUERY
 log = logging.getLogger(__name__)
 
 
+@special_command('\\lc', '\\lc', 'List catalogs.',
+                 arg_type=PARSED_QUERY, case_sensitive=True)
+def list_catalogs(cur, arg=None, arg_type=PARSED_QUERY, verbose=False):
+    try:
+        athena = cur.connection.client
+        res = athena.list_data_catalogs()
+        catalogs = [ [d['CatalogName']] for d in res['DataCatalogsSummary']]
+        return [(None, catalogs, ["catalog_name"], '')]
+    except:
+        return [(None, None, None, '')]
+
 @special_command('\\dt', '\\dt [table]', 'List or describe tables.',
                  arg_type=PARSED_QUERY, case_sensitive=True)
 def list_tables(cur, arg=None, arg_type=PARSED_QUERY, verbose=False):
     if arg:
-        query = 'SHOW COLUMNS FROM {0}'.format(arg)
+        query = 'SHOW COLUMNS IN {0}'.format(arg)
     else:
         query = 'SHOW TABLES'
     log.debug(query)
