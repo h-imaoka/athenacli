@@ -571,6 +571,7 @@ For more details about the error, you can check the log file: %s''' % (athenacli
         sqlexecute = self.sqlexecute
         now = datetime.now()
         string = string.replace('\\r', sqlexecute.region_name or '(none)')
+        string = string.replace('\\c', sqlexecute.catalog or '(none)')
         string = string.replace('\\d', sqlexecute.database or '(none)')
         string = string.replace('\\n', "\n")
         string = string.replace('\\D', now.strftime('%a %b %d %H:%M:%S %Y'))
@@ -597,6 +598,7 @@ def need_completion_refresh(queries):
     statement is an alter, create, drop or change db."""
     tokens = {
         'use', '\\u',
+        'usec',
         'create',
         'drop'
     }
